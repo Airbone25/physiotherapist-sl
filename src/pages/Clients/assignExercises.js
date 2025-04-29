@@ -16,8 +16,8 @@ const AssignExercises = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const date = useDate();
-  const params = useParams();
-  const userId = params.id;
+  const { id } = useParams();
+  const [userId,setUserId] = useState(id);
   const [client, setClient] = useState({});
   const [dayValue, setDayValue] = useState("Monday");
   const [assignedExercises, setAssignedExercises] = useState([]);
@@ -33,6 +33,7 @@ const AssignExercises = () => {
         const clientSnapshot = await getDocs(q);
         if (!clientSnapshot.empty) {
           setClient(clientSnapshot.docs[0].data());
+          console.log("Client data:", clientSnapshot.docs[0].data());
         } else {
           console.log("No client found");
         }
@@ -57,7 +58,7 @@ const AssignExercises = () => {
     setLoading(true);
     try {
       const clientQuerySnapshot = await getDocs(
-        query(collection(db, "Users"), where("userId", "==", client.userId))
+        query(collection(db, "Users"), where("userId", "==", userId))
       );
 
       if (!clientQuerySnapshot.empty) {
@@ -73,6 +74,7 @@ const AssignExercises = () => {
           id: doc.id,
           ...doc.data(),
         }));
+        console.log("Assigned exercises:", exercisesData);
 
         setAssignedExercises(exercisesData);
       }
@@ -127,7 +129,7 @@ const AssignExercises = () => {
             Back
           </Button>
           <Center className={classes.add}>
-            <Link to={`/Exercises/?client=${client.userId}`}>
+            <Link to={`/Exercises/?client=${userId}`}>
               <AiOutlinePlus className={classes.icon} />
             </Link>
           </Center>

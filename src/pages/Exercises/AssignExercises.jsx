@@ -20,9 +20,9 @@ const AssignExercises = () => {
         const simulatedFetch = async () => {
             await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate delay
             
-            // Simulate either an empty array or an array with data
-            const fetchedExercises = []; // Change to simulate exercises e.g., [{id:1, title:'Test', description:'Desc', thumbnailURL:''}]
-            setExercises(fetchedExercises);
+            const data = await getDocs(collection(db, "exercises"));
+            console.log(data)
+            setExercises(data);
         };
 
         simulatedFetch();
